@@ -48,7 +48,8 @@ int main(void){
         strcat(name, ".txt");
         FILE *input;
         input = fopen(name, "r");
-        
+
+        fscanf
     }
     return 0;
 }
