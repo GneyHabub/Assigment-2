@@ -49,7 +49,31 @@ int main(void){
         FILE *input;
         input = fopen(name, "r");
 
-        fscanf
+        struct course[50];
+        void readCourses(FILE *input, struct course*){
+            char temp[100];
+            for (size_t i = 0; i < 50; i++) {
+                fgets(temp, 500, input);
+                if (temp == "P\n"){
+                    return;
+                }
+                course[i].name = temp[0];
+                int j = 1;
+                char tempNum[10];
+                while (temp[j] != ' ') {
+                    strcat(course[i].name, temp[j]);
+                    j++;
+                }
+                while (temp[j] != ' ') {
+                    strcat(tempNum, temp[j]);
+                    j++;
+                }
+                course[i].numOfLabs = atoi(tempNum);
+                while (temp[j] != '\n') {
+                    
+                }
+            }
+        }
     }
     return 0;
 }
