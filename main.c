@@ -51,18 +51,23 @@ int main(void){
 
         struct course courses[50];
 
-        char temp[10];
-        fgets(temp, 500, input);
-        printf("%s\n", temp);
+        char temp[50];
         fgets(temp, 500, input);
         int flag = strcmp(temp, "P\n");
+        int i = 0;
         while (flag != 0) {
-            printf("%s\n", temp);
+            char tempStr[50];
+            int j = 0;
+            while (temp[j] != 32) {
+                tempStr[j] = temp[j];
+                printf("Q\n");
+                j++;
+            }
+            // strcpy(courses[i].name, tempStr);
+            // printf("%s\n", tempStr);
             fgets(temp, 500, input);
             flag = strcmp(temp, "P\n");
         }
-        
-
     }
     return 0;
 }
