@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-int main(void){
+int main(){
     struct dirent *de;
     DIR *dr = opendir(".");
     if (dr == NULL){
@@ -42,10 +42,10 @@ int main(void){
         int numOfStudents;
         int numOfLabs;
     };
-    for (size_t iterator = 1; iterator <= numOfFiles; iterator++) {
+    for (int iterator = 1; iterator <= numOfFiles; iterator++) {
         char name[8] = "input";
         char tempIter[numOfFiles + 1];
-        itoa(iterator, tempIter, 10);
+        sprintf(tempIter, "%d", iterator);
         strcat(name, tempIter);
         strcat(name, ".txt");
         FILE *input;
@@ -62,6 +62,7 @@ int main(void){
             char tempStr[50];
             int i = 0;
             int j = 0;
+            int k = 0;
             while (temp[j] != 32) {
                 tempStr[j] = temp[j];
                 j++;
@@ -70,13 +71,13 @@ int main(void){
             j++;
             strcpy(courses[i].name, tempStr);
 
-            int k = 0;
             while (temp[j] != 32) {
                 tempStr[k] = temp[j];
                 j++;
                 k++;
             }
             courses[i].numOfLabs = atoi(tempStr);
+            j++;
 
             k = 0;
             while (temp[j] != '\n') {
@@ -93,37 +94,39 @@ int main(void){
             numOfCourses++;
         }
 
-        fgets(temp, 500, input);
-        flag = strcmp(temp, "P\n");
-        while (flag != 0) {
-            char tempStr[50];
-            int i = 0;
-            int j = 0;
-            int k = 0;
-
-            while (temp[j] != 32){
-                tempStr[j] = temp[j];
-                j++;
-            }
-            tempStr[j] = '\0';
-            j++;
-            strcpy(proffs[i].firstName, tempStr);
-
-            k = 0;
-            while (temp[j] != 32){
-                tempStr[k] = temp[j];
-                j++;
-                k++;
-            }
-            tempStr[k] = '\0';
-            j++;
-            strcpy(proffs[i].lastName, tempStr);
-            printf("%s %s\n", proffs[i].firstName, proffs[i].lastName);
-
-            fgets(temp, 500, input);
-            flag = strcmp(temp, "T\n");
-            i++;
-        }
+        // int numOfProffs;
+        // fgets(temp, 500, input);
+        // flag = strcmp(temp, "T\n");
+        // while (flag != 0) {
+        //     char tempStr[50];
+        //     int i = 0;
+        //     int j = 0;
+        //     int k = 0;
+        //
+        //     while (temp[j] != 32){
+        //         tempStr[j] = temp[j];
+        //         j++;
+        //     }
+        //     tempStr[j] = '\0';
+        //     strcpy(proffs[i].firstName, tempStr);
+        //
+        //     j++;
+        //     k = 0;
+        //     while (temp[j] != 32){
+        //         tempStr[k] = temp[j];
+        //         j++;
+        //         k++;
+        //     }
+        //     tempStr[k] = '\0';
+        //     j++;
+        //     strcpy(proffs[i].lastName, tempStr);
+        //     printf("%s %s\n", proffs[i].firstName, proffs[i].lastName);
+        //
+        //     fgets(temp, 500, input);
+        //     flag = strcmp(temp, "T\n");
+        //     i++;
+        //     numOfProffs++;
+        // }
     }
     return 0;
 }
