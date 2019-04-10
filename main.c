@@ -70,9 +70,9 @@ int main(){
         int flag = strcmp(temp, "P\n");
         int numOfCourses = 0;
 
+        int i = 0;
         while (flag != 0) {
             char tempStr[50];
-            int i = 0;
             int j = 0;
             int k = 0;
             while (temp[j] != 32) {
@@ -104,9 +104,13 @@ int main(){
             i++;
             numOfCourses++;
         }
+        printf("%s:\n\nNumber Of Courses: %d\n", name, numOfCourses);
+        for (size_t i = 0; i < numOfCourses; i++) {
+            printf("%s requieres %d labs and can accept %d students\n", courses[i].name, courses[i].numOfLabs, courses[i].numOfStudents);
+        }
 
         int numOfProffs = 0;
-        int i = 0;
+        i = 0;
         fgets(temp, 500, input);
         flag = strcmp(temp, "T\n");
         while (flag != 0) {
@@ -155,11 +159,12 @@ int main(){
             i++;
             numOfProffs++;
         }
-        // for (size_t i = 0; i < numOfProffs; i++) {
-        //     for (size_t j = 0; j < proffs[i].numOfClasses; j++) {
-        //         printf("%s %s is trained for %s\n", proffs[i].firstName, proffs[i].lastName, proffs[i].trained[j]);
-        //     }
-        // }
+        printf("\nNumber Of Proffs: %d, \n", numOfProffs);
+        for (size_t i = 0; i < numOfProffs; i++) {
+            for (size_t j = 0; j < proffs[i].numOfClasses; j++) {
+                printf("%s %s is trained for %s\n", proffs[i].firstName, proffs[i].lastName, proffs[i].trained[j]);
+            }
+        }
 
         int numOfTAs = 0;
         i = 0;
@@ -211,20 +216,22 @@ int main(){
             i++;
             numOfTAs++;
         }
-        // for (size_t i = 0; i < numOfTAs; i++) {
-        //     for (size_t j = 0; j < TAs[i].numOfClasses; j++) {
-        //         printf("%s %s is trained for %s\n", TAs[i].firstName, TAs[i].lastName, TAs[i].trained[j]);
-        //     }
-        // }
+        printf("\nNumber Of TAs: %d, \n", numOfTAs);
+        for (size_t i = 0; i < numOfTAs; i++) {
+            for (size_t j = 0; j < TAs[i].numOfClasses; j++) {
+                printf("%s %s is trained for %s\n", TAs[i].firstName, TAs[i].lastName, TAs[i].trained[j]);
+            }
+        }
 
         int numOfStudents = 0;
         fgets(temp, 500, input);
         i = 0;
-        int j = 0;
-        int k = 0;
-        char tempStr[50];
+        int j;
+        int k;
         while (1) {
-            printf("%d: ", i);
+            char tempStr[50];
+            k = 0;
+            j = 0;
             while (temp[j] != 32) {
                 tempStr[k] = temp[j];
                 j++;
@@ -232,7 +239,6 @@ int main(){
             }
             tempStr[k] = '\0';
             strcpy(students[i].firstName, tempStr);
-            printf("%s ", students[i].firstName);
             k = 0;
             j++;
 
@@ -243,7 +249,6 @@ int main(){
             }
             tempStr[k] = '\0';
             strcpy(students[i].lastName, tempStr);
-            printf("%s ", students[i].lastName);
             k = 0;
             j++;
 
@@ -254,20 +259,17 @@ int main(){
             }
             tempStr[k] = '\0';
             students[i].id = atoi(tempStr);
-            printf("%d ", students[i].id);
             k = 0;
             j++;
 
             students[i].numOfClasses = 0;
-            while (temp[j] != '\n' && temp[j] != EOF) {
-                //printf("BLIA\n");
+            while (temp[j] != '\n' && temp[j] != '\0') {
                 if (temp[j] == 32) {
                     tempStr[k] = '\0';
                     strcpy(students[i].classes[students[i].numOfClasses], tempStr);
                     students[i].numOfClasses++;
                     k = 0;
                     j++;
-                    printf("%s\n", tempStr);
                 }
                 tempStr[k] = temp[j];
                 k++;
@@ -279,18 +281,19 @@ int main(){
             i++;
             numOfStudents++;
 
-            if (temp[j] == EOF) {
+            if (temp[j] == '\0') {
                 break;
             }
 
             fgets(temp, 500, input);
         }
-        //printf("num od std: %d, \n", numOfStudents);
-        // for (size_t i = 0; i < numOfStudents; i++) {
-        //     for (size_t j = 0; j < students[i].numOfClasses; j++) {
-        //         printf("%s %s is giong to %s\n", students[i].firstName, students[i].lastName, students[i].classes[j]);
-        //     }
-        // }
+        printf("\nNumber Of Sudents: %d, \n", numOfStudents);
+        for (size_t i = 0; i < numOfStudents; i++) {
+            for (size_t j = 0; j < students[i].numOfClasses; j++) {
+                printf("%s %s with id %d is attending %s\n", students[i].firstName, students[i].lastName, students[i].id, students[i].classes[j]);
+            }
+        }
+        printf("\n");
     }
     return 0;
 }
