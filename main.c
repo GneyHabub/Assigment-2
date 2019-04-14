@@ -4,6 +4,88 @@
 #include <limits.h>
 #include <stdlib.h>
 
+struct proff{
+    int numOfClasses;
+    int coursesAvaliable;
+    char firstName[100];
+    char lastName[100];
+    char trained[100][100];
+};
+
+struct TA{
+    int numOfClasses;
+    int coursesAvaliable;
+    char firstName[100];
+    char lastName[100];
+    char trained[100][100];
+};
+
+struct student{
+    int id;
+    int numOfClasses;
+    char firstName[100];
+    char lastName[100];
+    char classes[100][100];
+};
+
+struct course{
+    int numOfStudents;
+    int numOfLabs;
+    char name[100];
+};
+
+struct courseArr{
+    struct course arr[50];
+    int arrLen;
+};
+struct profArr{
+    struct proff arr[50];
+    int arrLen;
+};
+struct TAArr{
+    struct proff arr[50];
+    int arrLen;
+};
+
+int trainedP(struct proff p, struct course c){
+    for (size_t i = 0; i < p.numOfClasses; i++) {
+        int flag = strcmp(p.trained[i], c.name);
+        if (flag == 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void deleteP(struct proff p, struct profArr* pArr){
+    for (size_t i = 0; i < pArr->arrLen; i++) {
+        int flag1 = strcmp(p.firstName, pArr->arr[i].firstName);
+        int flag2 = strcmp(p.lastName, pArr->arr[i].lastName);
+        if (flag1 == 0 && flag2 == 0) {
+            for (size_t j = i; j < pArr->arrLen - 1; j++) {
+                pArr->arr[j] = pArr->arr[j+1];
+            }
+            pArr->arrLen--;
+        }
+    }
+}
+
+void deleteC(struct course c, struct courseArr* cArr){
+    for (size_t i = 0; i < cArr->arrLen; i++) {
+        int flag = strcmp(c.name, cArr->arr[i].name);
+        if (flag == 0) {
+            for (size_t j = i; j < cArr->arrLen - 1; j++) {
+                cArr->arr[j] = cArr->arr[j+1];
+            }
+            cArr->arrLen--;
+        }
+    }
+}
+
+// void assignP(struct profArr p, struct courseArr c, int bp, int* globBP){
+//
+// }
+
 int main(){
     struct dirent *de;
     DIR *dr = opendir(".");
@@ -23,35 +105,6 @@ int main(){
     }
     closedir(dr);
 
-    struct proff{
-        char firstName[100];
-        char lastName[100];
-        char trained[100][100];
-        int numOfClasses;
-        int coursesAvaliable;
-    };
-
-    struct TA{
-        char firstName[100];
-        char lastName[100];
-        char trained[100][100];
-        int numOfClasses;
-        int coursesAvaliable;
-    };
-
-    struct student{
-        char firstName[100];
-        char lastName[100];
-        char classes[100][100];
-        int id;
-        int numOfClasses;
-    };
-
-    struct course{
-        char name[100];
-        int numOfStudents;
-        int numOfLabs;
-    };
     for (int iterator = 1; iterator <= numOfFiles; iterator++) {
         char name[20] = "input";
         char tempIter[numOfFiles + 1];
@@ -88,7 +141,7 @@ int main(){
                 j++;
                 k++;
             }
-            courses[i].numOfLabs = atoi(tempStr);
+            courses[i].numOfLabs = (int)strtol(tempStr, NULL, 10);
             j++;
 
             k = 0;
@@ -97,17 +150,17 @@ int main(){
                 j++;
                 k++;
             }
-            courses[i].numOfStudents = atoi(tempStr);
+            courses[i].numOfStudents = (int)strtol(tempStr, NULL, 10);
 
             fgets(temp, 500, input);
             flag = strcmp(temp, "P\n");
             i++;
             numOfCourses++;
         }
-        printf("%s:\n\nNumber Of Courses: %d\n", name, numOfCourses);
-        for (size_t i = 0; i < numOfCourses; i++) {
-            printf("%s requieres %d labs and can accept %d students\n", courses[i].name, courses[i].numOfLabs, courses[i].numOfStudents);
-        }
+        // printf("%s:\n\nNumber Of Courses: %d\n", name, numOfCourses);
+        // for (size_t i = 0; i < numOfCourses; i++) {
+        //     printf("%s requieres %d labs and can accept %d students\n", courses[i].name, courses[i].numOfLabs, courses[i].numOfStudents);
+        // }
 
         int numOfProffs = 0;
         i = 0;
@@ -159,12 +212,12 @@ int main(){
             i++;
             numOfProffs++;
         }
-        printf("\nNumber Of Proffs: %d, \n", numOfProffs);
-        for (size_t i = 0; i < numOfProffs; i++) {
-            for (size_t j = 0; j < proffs[i].numOfClasses; j++) {
-                printf("%s %s is trained for %s\n", proffs[i].firstName, proffs[i].lastName, proffs[i].trained[j]);
-            }
-        }
+        // printf("\nNumber Of Proffs: %d, \n", numOfProffs);
+        // for (size_t i = 0; i < numOfProffs; i++) {
+        //     for (size_t j = 0; j < proffs[i].numOfClasses; j++) {
+        //         printf("%s %s is trained for %s\n", proffs[i].firstName, proffs[i].lastName, proffs[i].trained[j]);
+        //     }
+        // }
 
         int numOfTAs = 0;
         i = 0;
@@ -216,12 +269,12 @@ int main(){
             i++;
             numOfTAs++;
         }
-        printf("\nNumber Of TAs: %d, \n", numOfTAs);
-        for (size_t i = 0; i < numOfTAs; i++) {
-            for (size_t j = 0; j < TAs[i].numOfClasses; j++) {
-                printf("%s %s is trained for %s\n", TAs[i].firstName, TAs[i].lastName, TAs[i].trained[j]);
-            }
-        }
+        // printf("\nNumber Of TAs: %d, \n", numOfTAs);
+        // for (size_t i = 0; i < numOfTAs; i++) {
+        //     for (size_t j = 0; j < TAs[i].numOfClasses; j++) {
+        //         printf("%s %s is trained for %s\n", TAs[i].firstName, TAs[i].lastName, TAs[i].trained[j]);
+        //     }
+        // }
 
         int numOfStudents = 0;
         fgets(temp, 500, input);
@@ -258,7 +311,7 @@ int main(){
                 k++;
             }
             tempStr[k] = '\0';
-            students[i].id = atoi(tempStr);
+            students[i].id = (int)strtol(tempStr, NULL, 10);
             k = 0;
             j++;
 
@@ -287,13 +340,30 @@ int main(){
 
             fgets(temp, 500, input);
         }
-        printf("\nNumber Of Sudents: %d, \n", numOfStudents);
-        for (size_t i = 0; i < numOfStudents; i++) {
-            for (size_t j = 0; j < students[i].numOfClasses; j++) {
-                printf("%s %s with id %d is attending %s\n", students[i].firstName, students[i].lastName, students[i].id, students[i].classes[j]);
-            }
+        // printf("\nNumber Of Sudents: %d, \n", numOfStudents);
+        // for (size_t i = 0; i < numOfStudents; i++) {
+        //     for (size_t j = 0; j < students[i].numOfClasses; j++) {
+        //         printf("%s %s with id %d is attending %s\n", students[i].firstName, students[i].lastName, students[i].id, students[i].classes[j]);
+        //     }
+        // }
+        // printf("\n");
+
+        int badPoints = INT_MAX;
+
+        struct profArr list;
+        list.arrLen = 0;
+        for (size_t i = 0; i < numOfProffs; i++) {
+            list.arr[i] = proffs[i];
+            list.arrLen++;
         }
-        printf("\n");
+
+        struct courseArr list1;
+        list1.arrLen = 0;
+        for (size_t i = 0; i < numOfCourses; i++) {
+            list1.arr[i] = courses[i];
+            list1.arrLen++;
+        }
+
     }
     return 0;
 }
