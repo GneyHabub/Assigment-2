@@ -2,7 +2,7 @@ Math 4 50
 Programming 4 60
 Philosophy 4 70
 P
-Joseph Brown Math Programming
+Joseph Brown Killing Programming
 Giancarlo Succi Programming
 T
 Munir Makhmutov Programming
