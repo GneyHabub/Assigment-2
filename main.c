@@ -8,23 +8,15 @@
 
 #include <stdlib.h>
 
-struct result {
-    char notRunnedCourses[100][100];
-    int numNRC;
-    char notAssignedProfs[100][100];
-    int numNAP;
-    char lackingClassProfs[100][100];
-    int numLCP;
-    char notTrainedProfs[100][100];
-    int numNTP;
-};
-
 struct proff {
     int numOfClasses;
     int coursesAvaliable;
+    int isTeachingUntrained;
+    //struct course assignedCourse1;
+    //struct course assignedCourse1;
     char firstName[100];
     char lastName[100];
-    char trained[100][100];
+    char trained[100][50];
 };
 
 struct TA {
@@ -64,6 +56,11 @@ struct TAArr {
     int arrLen;
 };
 
+struct result {
+    struct courseArr c;
+    struct profArr p;
+};
+
 int trainedP(struct proff p, struct course c) {
     for (size_t i = 0; i < p.numOfClasses; i++) {
         int flag = strcmp(p.trained[i], c.name);
@@ -74,7 +71,7 @@ int trainedP(struct proff p, struct course c) {
     return 0;
 }
 
-void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct result res){
+void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct result* res){
     int flag1 = 1;
     int flag2 = 1;
     int chek = 0;
@@ -87,49 +84,45 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
     if(flag1 == 1){
         for(int j = 0; j < c.arrLen; j++){
             if(c.arr[j].isAvailable == 1){
-                printf("%s is not running\n", c.arr[j].name);
+                //printf("%s is not running\n", c.arr[j].name);
                 bp += 20;
             }
         }
     }
     for(int i = 0; i < c.arrLen; i++){
         if (c.arr[i].isAvailable != 0){
-          printf("%s is still available\n", c.arr[i].name);
+            //printf("%s is still available\n", c.arr[i].name);
             flag2 = 0;
             break;
         }
     }
     if(flag2 == 1){
-      printf("COURSES ARE OVER!\n");
+        //printf("COURSES ARE OVER!\n");
         for(int j = 0; j < p.arrLen; j++){
             if(p.arr[j].coursesAvaliable == 1){
-                printf("%s %s lacks a class\n", p.arr[j].firstName, p.arr[j].lastName);
+                //printf("%s %s lacks a class\n", p.arr[j].firstName, p.arr[j].lastName);
                 bp += 5;
             }else if(p.arr[j].coursesAvaliable == 2){
-                printf("%s %s is unassigned\n", p.arr[j].firstName, p.arr[j].lastName);
+                //printf("%s %s is unassigned\n", p.arr[j].firstName, p.arr[j].lastName);
                 bp += 10;
             }
         }
     }
     if (flag1 == 1 || flag2 == 1) {
         if (bp < *gbp) {
-            printf("      UPDATED\n");
+           // printf("      UPDATED\n");
             *gbp = bp;
-            // if(flag1 == 1){
-
-            // }
-            // if(flag2 == 1){
-
-            // }
+            res->p = p;
+            res->c = c;
         }
-        printf("___OVER___\n");
+        //printf("___OVER___\n");
         return;
     }
 
     for(int i = 0; i < p.arrLen; i++){
-        printf("interation %d\n", i);
+        //printf("interation %d\n", i);
         if(p.arr[i].coursesAvaliable == 0){
-            printf("CANNOT ASSIGN %s %s\n", p.arr[i].firstName, p.arr[i].lastName);
+            //printf("CANNOT ASSIGN %s %s\n", p.arr[i].firstName, p.arr[i].lastName);
             continue;
         }else{
             p.arr[i].coursesAvaliable--;
@@ -150,22 +143,25 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
                 p.arr[i].coursesAvaliable--;
                 bp += 5;
                 untrainedflag = 1;
-                printf("%s %s ID NOT TRAINED FOR %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
+                p.arr[i].isTeachingUntrained = 1;
+                //printf("%s %s ID NOT TRAINED FOR %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
             }else{
                 p.arr[i].coursesAvaliable++;
                 continue;
             }
         }
 
-        printf("%s %s(%d) is now assigned to %s\n", p.arr[i].firstName, p.arr[i].lastName, i, c.arr[cur].name);
+        c.arr[cur].assignedP = p.arr[i];
+
+        //printf("%s %s(%d) is now assigned to %s\n", p.arr[i].firstName, p.arr[i].lastName, i, c.arr[cur].name);
 
         assignP(p, c, bp, gbp, res);
 
         if(untrainedflag == 1){
-            printf("%s %s was NOT trained for %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
+            //printf("%s %s was NOT trained for %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
             p.arr[i].coursesAvaliable += 2;
         } else{
-            printf("%s %s was trained for %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
+            //printf("%s %s was trained for %s\n", p.arr[i].firstName, p.arr[i].lastName, c.arr[cur].name);
             p.arr[i].coursesAvaliable++;
         }
         c.arr[cur].isAvailable = 1;
@@ -175,7 +171,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
 
 int main() {
     struct dirent * de;
-    DIR * dr = opendir(".");
+    DIR* dr = opendir(".");
     if (dr == NULL) {
         printf("Could not open current directory\n");
         return 0;
@@ -436,6 +432,7 @@ int main() {
             list.arr[i] = proffs[i];
             list.arrLen++;
             list.arr[i].coursesAvaliable = 2;
+            list.arr[i].isTeachingUntrained = 0;
         }
 
         struct courseArr list1;
@@ -447,13 +444,14 @@ int main() {
         }
 
         struct result res;
-        res.numNRC = 0;
-        res.numNAP = 0;
-        res.numLCP = 0;
-        res.numNTP = 0;
 
-        assignP(list, list1, badPoints, &badPointsG, res);
-        printf("%d\n", badPointsG);
+        assignP(list, list1, badPoints, &badPointsG, &res);
+        for(int i = 0; i < res.c.arrLen; i++){
+            if(res.c.arr[i].isAvailable == 0){
+                printf("%s %s is teaching %s\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName, res.c.arr[i].name);
+            }
+        }
+        printf("Total score is %d.\n", badPointsG);
 
     }
     return 0;
