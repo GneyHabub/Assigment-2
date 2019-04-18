@@ -140,10 +140,17 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
                             }
                         }
                     }
+                    for(int k = 0; k < ta.arrLen; k++){
+                        int tempDel = 0;
+                        for(int m = 0; m < c.arr[j].numOfLabs - c.arr[j].labsAvailable; m++){
+                                if(strcmp(ta.arr[k].firstName, c.arr[j].assignedTA[m].firstName) == 0 && strcmp(ta.arr[k].lastName, c.arr[j].assignedTA[m].lastName) == 0){
+                                    tempDel++;
+                                }
+                            }
+                        ta.arr[k].coursesAvailable += tempDel;
+                    }
                     c.arr[j].isRunned = 0;
-                    //printf("BP WERE %d, ", bp);
                     bp += 20;
-                    //printf("BP ARE %d\n", bp);
                 }
             }
         }
@@ -244,9 +251,9 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
         // }
         // printf("BEFORE GOING TO TA WE HAVE %d BP\n", bp);
 
-        for(int i = 0; i  < ta.arrLen; i++){
-            printf("%s %s - %d\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable);
-        }
+        // for(int i = 0; i  < ta.arrLen; i++){
+        //     printf("%s %s - %d\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable);
+        // }
         assignTA(ta, c, bp, gbp, res,  p);
         return;
     }
