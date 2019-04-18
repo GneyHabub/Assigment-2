@@ -1,11 +1,7 @@
 #include <stdio.h>
-
 #include <dirent.h>
-
 #include <string.h>
-
 #include <limits.h>
-
 #include <stdlib.h>
 
 struct proff {
@@ -37,7 +33,7 @@ struct course {
     int isAvailable;
     int isRunned;
     struct proff assignedP;
-    struct TA assignedTA[5];
+    struct TA assignedTA[10];
     int numOfStudents;
     int numOfLabs;
     int labsAvailable;
@@ -189,14 +185,10 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
             }
         }
          if(curFlag == 0){
+             ta.arr[i].coursesAvailable++;
             continue;
         }
 
-        // if (trainedTA(ta.arr[i], c.arr[cur]) == 0) {
-        //     c.arr[cur].labsAvailable++;
-        //     ta.arr[i].coursesAvailable++;
-        //     continue;
-        // }
         c.arr[cur].assignedTA[c.arr[cur].numOfLabs - c.arr[cur].labsAvailable-1] = ta.arr[i];
         // printf("%s %s which has %d labs is assigned to %s\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable, c.arr[cur].name);
         // printf("%d\n", c.arr[cur].labsAvailable);
@@ -596,7 +588,6 @@ int main() {
             list1.arr[i].labsAvailable = list1.arr[i].numOfLabs;
             list1.arrLen++;
         }
-        printf("----------------------------------------------------------------NUM OF TAs - %d\n", numOfTAs);
         struct TAArr list2;
         list2.arrLen = 0;
         for (size_t i = 0; i < numOfTAs; i++) {
@@ -623,6 +614,9 @@ int main() {
             ggbp += 10;
           }
           if(res.p.arr[i].coursesAvailable == 1){
+            ggbp += 5;
+          }
+          if(res.p.arr[i].coursesAvailable == 0 && res.p.arr[i].isTeachingUntrained == 1){
             ggbp += 5;
           }
         }
