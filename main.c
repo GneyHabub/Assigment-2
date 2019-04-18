@@ -109,7 +109,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
                 if(ta.arr[j].coursesAvailable != 0){
                     //printf("%s %sis checked with %s\n", ta.arr[j].firstName, ta.arr[j].lastName, c.arr[i].name);
                     if(trainedTA(ta.arr[j], c.arr[i]) == 1){
-                        printf("%s %s still can be assugned to %s\n", ta.arr[j].firstName, ta.arr[j].lastName, c.arr[i].name);
+                        //printf("%s %s still can be assigned to %s\n", ta.arr[j].firstName, ta.arr[j].lastName, c.arr[i].name);
                         flag3 = 0;
                         break;
                     }
@@ -117,7 +117,13 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
             }
         }
     }
-    if(flag1 == 1 || flag3 == 1){
+    if(flag3 == 1){
+        for(int i = 0; i < ta.arrLen; i++){
+            printf(" STILL CAN HAVE %d\n", ta.arr[i].coursesAvailable);
+        }
+
+    }
+    if (flag1 == 1 || flag2 == 1 || flag3 == 1) {
         for(int j = 0; j < c.arrLen; j++){
             if(c.arr[j].labsAvailable != 0){
                 if(c.arr[j].isRunned = 1){
@@ -125,11 +131,11 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
                         if(strcmp(p.arr[k].firstName, c.arr[j].assignedP.firstName) == 0 && strcmp(p.arr[k].lastName, c.arr[j].assignedP.lastName) == 0){
                             bp += 5;
                             //printf("%s %s is teaching %s but course cannot be runned\n", c.arr[j].assignedP.firstName, c.arr[j].assignedP.lastName, c.arr[j].name);
-                            if(p.arr[k].isTeachingUntrained == 1){
-                                p.arr[k].coursesAvailable += 2;
-                            }else{
-                                p.arr[k].coursesAvailable += 1;
-                            }
+                            // if(p.arr[k].isTeachingUntrained == 1){
+                            //     p.arr[k].coursesAvailable += 2;
+                            // }else{
+                            //     p.arr[k].coursesAvailable += 1;
+                            // }
                         }
                     }
                 }
@@ -137,13 +143,12 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
                 bp += 20;
             }
         }
-    }
-    if(flag2 == 1 || flag3 == 1){
         for(int j = 0; j < ta.arrLen; j++){
+            //printf("TA STILL HAS %d\n", ta.arr[j].coursesAvailable);
             bp += ta.arr[j].coursesAvailable*2;
         }
-    }
-    if (flag1 == 1 || flag2 == 1 || flag3 == 1) {
+
+        //printf("WERE OVER %d\n", bp);
         if (bp < *gbp) {
             *gbp = bp;
             res->p = p;
@@ -175,8 +180,8 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
             continue;
         }
         c.arr[cur].assignedTA[c.arr[cur].numOfLabs - c.arr[cur].labsAvailable-1] = ta.arr[i];
-        //printf("%s %s which has %d labs is assigned to %s\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable, c.arr[cur].name);
-        //printf("%d\n", c.arr[cur].labsAvailable);
+        printf("%s %s which has %d labs is assigned to %s\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable, c.arr[cur].name);
+        printf("%d\n", c.arr[cur].labsAvailable);
 
         assignTA(ta, c, bp, gbp, res, p);
 
@@ -194,40 +199,31 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
             break;
         }
     }
-    if(flag1 == 1){
-        for(int j = 0; j < c.arrLen; j++){
-            if(c.arr[j].isRunned == 0){
-                bp += 20;
-            }
-        }
-    }
     for(int i = 0; i < c.arrLen; i++){
         if (c.arr[i].isAvailable != 0){
             flag2 = 0;
             break;
         }
     }
-    if(flag2 == 1){
+    if (flag1 == 1 || flag2 == 1) {
+        for(int i = 0; i < c.arrLen; i++){
+            if(c.arr[i].isRunned == 0){
+                bp += 20;
+            }
+        }
         for(int j = 0; j < p.arrLen; j++){
             if(p.arr[j].coursesAvailable == 1){
                 bp += 5;
             }else if(p.arr[j].coursesAvailable == 2){
                 bp += 10;
+            }else if(p.arr[j].coursesAvailable == 0 && p.arr[j].isTeachingUntrained == 1){
+                bp += 5;
             }
+         }
+        for(int i = 0; i < c.arrLen; i++){
+            if (c.arr[i].isRunned == 1){
         }
-    }
-    if (flag1 == 1 || flag2 == 1) {
-        // if (bp < *gbp) {
-        //     *gbp = bp;
-        //     res->p = p;
-        //     res->c = c;
-        // }
-    //     for(int i = 0; i < c.arrLen; i++){
-    //     if (c.arr[i].isRunned == 1){
-    //         printf("%s is runned by %s %s\nNum of bp = %d\n", c.arr[i].name, c.arr[i].assignedP.firstName, c.arr[i].assignedP.lastName, bp);
-    //     }
-    // }
-    //     printf("**************OVER**************\n");
+        }
         assignTA(ta, c, bp, gbp, res,  p);
         return;
     }
@@ -236,6 +232,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
         if(i == p.arrLen){
             int cur;
         for(int j = 0; j < c.arrLen; j++){
+
             if(c.arr[j].isAvailable == 1){
                 cur = j;
                 c.arr[j].isAvailable = 0;
@@ -267,10 +264,12 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
         if (trainedP(p.arr[i], c.arr[cur]) == 0) {
             if(p.arr[i].coursesAvailable == 1){
                 p.arr[i].coursesAvailable--;
-                bp += 5;
+                //bp += 5;
                 untrainedflag = 1;
                 p.arr[i].isTeachingUntrained = 1;
             }else{
+                c.arr[cur].isAvailable = 1;
+                c.arr[cur].isRunned = 0;
                 p.arr[i].coursesAvailable++;
                 continue;
             }
@@ -589,6 +588,7 @@ int main() {
           }
         }
         for(int i = 0; i < res.p.arrLen; i++){
+            printf("%s %s - %d\n", res.p.arr[i].firstName, res.p.arr[i].lastName, res.p.arr[i].coursesAvailable);
           if(res.p.arr[i].coursesAvailable == 2){
             ggbp += 10;
           }
@@ -597,7 +597,8 @@ int main() {
           }
         }
         for(int i = 0; i < res.ta.arrLen; i++){
-            ggbp += res.ta.arr[j].coursesAvailable*2;
+            printf("%d\n", res.ta.arr[i].coursesAvailable);
+            ggbp += res.ta.arr[i].coursesAvailable*2;
         }
 
         for(int i = 0; i < res.c.arrLen; i++){
