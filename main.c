@@ -27,7 +27,7 @@ struct subject{
 };
 
 struct student {
-    int id;
+    char id[6];
     int numOfClasses;
     char firstName[25];
     char lastName[25];
@@ -104,14 +104,11 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
     int flag2 = 1;
     int flag3 = 1;
     for(int i = 0; i < ta.arrLen; i++){
-       // printf("%d\n", ta.arrLen);
         if (ta.arr[i].coursesAvailable != 0){
-            //printf("%s - %d\n", ta.arr[i].firstName, ta.arr[i].coursesAvailable);
             flag1 = 0;
             break;
         }
     }
-    //printf("THATS IT\n");
 
     for(int i = 0; i < c.arrLen; i++){
         if (c.arr[i].labsAvailable != 0){
@@ -121,13 +118,9 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
     }
     for(int i = 0; i < c.arrLen; i++){
         if(c.arr[i].labsAvailable != 0){
-            //printf("Course is %s\n", c.arr[i].name);
             for(int j = 0; j < ta.arrLen; j++){
-                //printf("TA has %d courses available\n", ta.arr[j].coursesAvailable);
                 if(ta.arr[j].coursesAvailable != 0){
-                    //printf("%s %s is checked with %s\n", ta.arr[j].firstName, ta.arr[j].lastName, c.arr[i].name);
                     if(trainedTA(ta.arr[j], c.arr[i]) == 1){
-                        //printf("%s %s still can be assigned to %s\n", ta.arr[j].firstName, ta.arr[j].lastName, c.arr[i].name);
                         flag3 = 0;
                         break;
                     }
@@ -137,7 +130,6 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
     }
     if(flag3 == 1){
         for(int i = 0; i < ta.arrLen; i++){
-            //printf(" STILL CAN HAVE %d\n", ta.arr[i].coursesAvailable);
         }
 
     }
@@ -148,7 +140,6 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
                     for(int k = 0; k < p.arrLen; k++){
                         if(strcmp(p.arr[k].firstName, c.arr[j].assignedP.firstName) == 0 && strcmp(p.arr[k].lastName, c.arr[j].assignedP.lastName) == 0){
                             bp += 5;
-                            //printf("%s %s is teaching %s but course cannot be runned\n", c.arr[j].assignedP.firstName, c.arr[j].assignedP.lastName, c.arr[j].name);
                             if(p.arr[k].isTeachingUntrained == 1){
                                 p.arr[k].coursesAvailable += 2;
                             }else{
@@ -171,13 +162,10 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
             }
         }
         for(int j = 0; j < ta.arrLen; j++){
-            //printf("TA STILL HAS %d\n", ta.arr[j].coursesAvailable);
             bp += ta.arr[j].coursesAvailable*2;
         }
 
-        //printf("WERE OVER %d\n", bp);
         if (bp < *gbp) {
-            //printf("UPDATED\n");
             *gbp = bp;
             res->p = p;
             res->ta = ta;
@@ -191,7 +179,6 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
             continue;
         }else{
             ta.arr[i].coursesAvailable--;
-            //printf("%s %s\n", ta.arr[i].firstName, ta.arr[i].lastName);
         }
 
         int cur = 0;
@@ -210,8 +197,6 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int* gbp, struct resu
         }
 
         c.arr[cur].assignedTA[c.arr[cur].numOfLabs - c.arr[cur].labsAvailable-1] = ta.arr[i];
-        // printf("%s %s which has %d labs is assigned to %s\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable, c.arr[cur].name);
-        // printf("%d\n", c.arr[cur].labsAvailable);
 
         assignTA(ta, c, bp, gbp, res, p);
 
@@ -254,18 +239,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
             if (c.arr[i].isRunned == 1){
             }
         }
-        // for(int i = 0; i < c.arrLen; i++){
-        //     if(c.arr[i].isRunned == 1){
-        //         printf("%s is runned by %s %s\n", c.arr[i].name, c.arr[i].assignedP.firstName, c.arr[i].assignedP.lastName);
-        //     }else{
-        //         printf("%s is not runned\n", c.arr[i].name);
-        //     }
-        // }
-        // printf("BEFORE GOING TO TA WE HAVE %d BP\n", bp);
 
-        // for(int i = 0; i  < ta.arrLen; i++){
-        //     printf("%s %s - %d\n", ta.arr[i].firstName, ta.arr[i].lastName, ta.arr[i].coursesAvailable);
-        // }
         assignTA(ta, c, bp, gbp, res,  p);
         return;
     }
@@ -306,7 +280,6 @@ void assignP(struct profArr p, struct courseArr c, int bp, int* gbp, struct resu
         if (trainedP(p.arr[i], c.arr[cur]) == 0) {
             if(p.arr[i].coursesAvailable == 1){
                 p.arr[i].coursesAvailable--;
-                //bp += 5;
                 untrainedflag = 1;
                 p.arr[i].isTeachingUntrained = 1;
             }else{
@@ -397,10 +370,6 @@ int main() {
 
             numOfCourses++;
         }
-        // printf("%s:\n\nNumber Of Courses: %d\n", name, numOfCourses);
-        // for (size_t i = 0; i < numOfCourses; i++) {
-        //     printf("%s requieres %d labs and can accept %d students\n", courses[i].name, courses[i].numOfLabs, courses[i].numOfStudents);
-        // }
 
         int numOfProffs = 0;
         while (1) {
@@ -414,7 +383,6 @@ int main() {
 
             char tBuf;
             int wordsRead = sscanf(buffer, "%c", & tBuf);
-            // See if we read T symbol
             if (wordsRead == 1 && tBuf == 'T') {
                 break;
             }
@@ -447,14 +415,6 @@ int main() {
             free(origBuffer);
             numOfProffs++;
         }
-
-        // printf("\nNumber Of Proffs: %d, \n", numOfProffs);
-        // for (size_t i = 0; i < numOfProffs; i++) {
-        //     for (size_t j = 0; j < proffs[i].numOfClasses; j++) {
-        //         printf("%s %s is trained for %s\n", proffs[i].firstName, proffs[i].lastName, proffs[i].trained[j]);
-        //     }
-        // }
-
 
         int numOfTAs = 0;
         while (1) {
@@ -503,13 +463,6 @@ int main() {
             numOfTAs++;
         }
 
-        // printf("\nNumber Of TAs: %d, \n", numOfTAs);
-        // for (size_t i = 0; i < numOfTAs; i++) {
-        //     for (size_t j = 0; j < TAs[i].numOfClasses; j++) {
-        //         printf("%s %s is trained for %s\n", TAs[i].firstName, TAs[i].lastName, TAs[i].trained[j]);
-        //     }
-        // }
-
         int numOfStudents = 0;
         fgets(temp, 500, input);
         int i = 0;
@@ -545,7 +498,7 @@ int main() {
                 k++;
             }
             tempStr[k] = '\0';
-            students[i].id = (int) strtol(tempStr, NULL, 10);
+            strcpy(students[i].id , tempStr);
             k = 0;
             j++;
 
@@ -577,7 +530,6 @@ int main() {
 
         for (size_t i = 0; i < numOfStudents; i++) {
             for (size_t j = 0; j < students[i].numOfClasses; j++) {
-                //printf("%s to %s %s\n", students[i].subjects[j].name, students[i].firstName, students[i].lastName);
                 students[i].subjects[j].isStudied = 0;
             }
         }
@@ -611,13 +563,6 @@ int main() {
             list2.arrLen++;
         }
 
-        // struct studArr list3;
-        // list3.arrLen = 0;
-        // for(int i = 0; i < numOfStudents; i++){
-        //     list3.arr[i] = students[i];
-        //     list3.arrLen++;
-        // }
-
         struct result res;
 
         assignP(list, list1, badPoints, &badPointsG, &res, list2);
@@ -625,24 +570,8 @@ int main() {
         //*************************************************************
 
         for(int i = 0; i < numOfStudents; i++){
-            for(int j = 0; j < students[i].numOfClasses; j++){
-                //printf("%s %s wanna have %s\n", students[i].firstName, students[i].lastName, students[i].subjects[j].name);
-            }
-        }
-
-        for(int i = 0; i < numOfStudents; i++){
-            for(int j = 0; j < students[i].numOfClasses; j++){
-                if(isWanted(students[i], res.c.arr[j]) == 0){
-                    //printf("%s %s cant take %s\n", students[i].firstName, students[i].lastName, students[i].subjects[j].name);
-                }
-            }
-        }
-
-
-        for(int i = 0; i < numOfStudents; i++){
             for(int j = 0; j < res.c.arrLen; j++){
                 if(isWanted(students[i], res.c.arr[j]) == 1 && res.c.arr[j].numOfStudents > 0 && res.c.arr[j].isRunned == 1){
-                    //printf("%s %s is trying to be assigned to %s\n", students[i].firstName, students[i].lastName, res.c.arr[j].name);
                     for(int k = 0; k < students[i].numOfClasses; k++){
                         if(strcmp(students[i].subjects[k].name, res.c.arr[j].name) == 0){
                             students[i].subjects[k].isStudied = 1;
@@ -661,7 +590,6 @@ int main() {
           }
         }
         for(int i = 0; i < res.p.arrLen; i++){
-            //printf("%s %s - %d\n", res.p.arr[i].firstName, res.p.arr[i].lastName, res.p.arr[i].coursesAvailable);
           if(res.p.arr[i].coursesAvailable == 2){
             ggbp += 10;
           }
@@ -673,29 +601,64 @@ int main() {
           }
         }
         for(int i = 0; i < res.ta.arrLen; i++){
-            printf("%d\n", res.ta.arr[i].coursesAvailable);
             ggbp += res.ta.arr[i].coursesAvailable*2;
         }
         for(int i = 0; i < numOfStudents; i++){
             for(int j = 0; j < students[i].numOfClasses; j++){
                 if(students[i].subjects[j].isStudied == 0){
-                    printf("%s %s cant take %s\n", students[i].firstName, students[i].lastName, students[i].subjects[j].name);
                     ggbp++;
                 }
             }
         }
 
         for(int i = 0; i < res.c.arrLen; i++){
+          printf("%s\n", res.c.arr[i].name);
             if(res.c.arr[i].isRunned == 1){
-                printf("%s %s is teaching %s\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName, res.c.arr[i].name);
-                if(res.c.arr[i].labsAvailable == 0){
-                    for (int j = 0; j < res.c.arr[i].numOfLabs; j++){
-                        printf("%s %s\n", res.c.arr[i].assignedTA[j].firstName, res.c.arr[i].assignedTA[j].lastName);
-                    }
+                printf("%s %s\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName);
+                for (int j = 0; j < res.c.arr[i].numOfLabs; j++){
+                    printf("%s %s\n", res.c.arr[i].assignedTA[j].firstName, res.c.arr[i].assignedTA[j].lastName);
+                }
+                for(int j = 0; j < numOfStudents; j++){
+                  if(isWanted(students[j], res.c.arr[i]) == 1){
+                    printf("%s %s %s\n", students[j].firstName, students[j].lastName, students[j].id);
+                  }
+                }
+            }
+          printf("\n");
+        }
+
+        for(int i = 0; i < res.c.arrLen; i++){
+          if(res.c.arr[i].isRunned == 0){
+            printf("%s cannot be run.\n", res.c.arr[i].name);
+          }
+        }
+        for(int i = 0; i < res.p.arrLen; i++){
+          if(res.p.arr[i].coursesAvailable == 2){
+            printf("%s %s is unassigned.\n", res.p.arr[i].firstName, res.p.arr[i].lastName);
+          }
+          if(res.p.arr[i].coursesAvailable == 1){
+            printf("%s %s is lacking class.\n", res.p.arr[i].firstName, res.p.arr[i].lastName);
+          }
+        }
+        for(int i = 0; i < res.c.arrLen; i++){
+          if(res.c.arr[i].assignedP.isTeachingUntrained == 1){
+            printf("%s %s is not trained for %s.\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName, res.c.arr[i].name);
+          }
+        }
+        for(int i = 0; i < res.ta.arrLen; i++){
+            if(res.ta.arr[i].coursesAvailable > 0){
+                printf("%s %s is lacking %d lab(s).\n", res.ta.arr[i].firstName, res.ta.arr[i].lastName, res.ta.arr[i].coursesAvailable);
+            }
+        }
+        for(int i = 0; i < numOfStudents; i++){
+            for(int j = 0; j < students[i].numOfClasses; j++){
+                if(students[i].subjects[j].isStudied == 0){
+                    printf("%s %s is lacking %s\n", students[i].firstName, students[i].lastName, students[i].subjects[j].name);
                 }
             }
         }
-        printf("Explicit points - %d, counted later - %d.\n", badPointsG, ggbp);
+
+        printf("Total score is %d.", ggbp);
     }
     return 0;
 }
