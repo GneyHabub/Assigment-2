@@ -611,6 +611,8 @@ int main() {
             }
         }
 
+        printf("%s:\n\n", name);
+
         for(int i = 0; i < res.c.arrLen; i++){
           printf("%s\n", res.c.arr[i].name);
             if(res.c.arr[i].isRunned == 1){
