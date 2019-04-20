@@ -1,8 +1,7 @@
-Math 2 50
-Programming 3 70
+Math 4 60
+Programming 4 50
 P
 Joseph Brown Math Programming
-Giancarlo Succi Programming
 T
 Munir Makhmutov Programming
 Marat Mingazov Math

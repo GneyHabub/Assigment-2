@@ -1,11 +1,10 @@
-Math 2 50
-Programming 3 70
+Math 4 20
+Programming 4 20
 P
 Joseph Brown Math Programming
-Giancarlo Succi Programming
 T
 Munir Makhmutov Programming
 Marat Mingazov Math
 S
-Mark Lancaster 02930 Math Programming
+Mark Lancaster 02930 Programming
 John Smith 92383 Programming
