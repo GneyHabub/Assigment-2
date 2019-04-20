@@ -196,9 +196,9 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
         // If current BP are less then the global ones, then update BP and struct of results
         if (bp < * gbp) {
             * gbp = bp;
-            res - > p = p;
-            res - > ta = ta;
-            res - > c = c;
+            res -> p = p;
+            res -> ta = ta;
+            res -> c = c;
         }
         return;
     }
@@ -417,9 +417,6 @@ int main() {
 
             if (read != 3 && strcmp(courseName, "P") == 0) {
                 break;
-            }else {
-                fprintf(output, "Invalid input.");
-                goto next;
             }
 
             // Write information to proper fields of the struct
@@ -444,9 +441,6 @@ int main() {
             int wordsRead = sscanf(buffer, "%c", & tBuf);
             if (wordsRead == 1 && tBuf == 'T') {
                 break;
-            }else {
-                fprintf(output, "Invalid input.");
-                goto next;
             }
 
             // Scan name and surname in this block of code
