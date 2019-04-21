@@ -542,7 +542,7 @@ int main() {
         // Reading students
         int numOfStudents = 0;
         if (fgets(temp, 500, input) == NULL) {
-            fprintf(output, "Invalid input.");
+            goto algo;
         }
         int i = 0;
         int j;
@@ -639,7 +639,7 @@ int main() {
         }
 
         //**********************END OF THE PARSING****************************
-
+algo:
         // Now fill structs with apropriate information needed for algorithm
         for (size_t i = 0; i < numOfStudents; i++) {
             for (size_t j = 0; j < students[i].numOfClasses; j++) {
@@ -727,8 +727,8 @@ int main() {
 
         // Output
         for (int i = 0; i < res.c.arrLen; i++) {
-            fprintf(output, "%s\n", res.c.arr[i].name);
             if (res.c.arr[i].isRunned == 1) {
+                fprintf(output, "%s\n", res.c.arr[i].name);
                 fprintf(output, "%s %s\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName);
                 for (int j = 0; j < res.c.arr[i].numOfLabs; j++) {
                     fprintf(output, "%s %s\n", res.c.arr[i].assignedTA[j].firstName, res.c.arr[i].assignedTA[j].lastName);
@@ -738,8 +738,8 @@ int main() {
                         fprintf(output, "%s %s %s\n", students[j].firstName, students[j].lastName, students[j].id);
                     }
                 }
+                fprintf(output, "\n");
             }
-            fprintf(output, "\n");
         }
 
         for (int i = 0; i < res.c.arrLen; i++) {
