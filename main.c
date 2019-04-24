@@ -47,12 +47,12 @@ struct student {
 
 // Struct of a course which containes it's name, assigned prof, list of assigned TAs
 // number of required labs and students, counter for labs which are not taken by any
-// of TAs, flag which shows if this course is runned and flag which shows if this course
+// of TAs, flag which shows if this course is ran and flag which shows if this course
 // can be assigned to a prof (I need two flags to have opportunity to not run a course on purpose,
-// e.g. it is not runned, but no prof can take it).
+// e.g. it is not ran, but no prof can take it).
 struct course {
     int isAvailable;
-    int isRunned;
+    int isRan;
     struct proff assignedP;
     struct TA assignedTA[10];
     int numOfStudents;
@@ -73,11 +73,6 @@ struct profArr {
 };
 struct TAArr {
     struct TA arr[20];
-    int arrLen;
-};
-
-struct studArr {
-    struct student arr[20];
     int arrLen;
 };
 
@@ -144,7 +139,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
         }
     }
     // Base case 3 - there are available corses and free TA, but TA are not trained
-    // for any of the courses
+    // for any of these courses
     for (int i = 0; i < c.arrLen; i++) {
         if (c.arr[i].labsAvailable != 0) {
             for (int j = 0; j < ta.arrLen; j++) {
@@ -164,7 +159,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
         // respectively.
         for (int j = 0; j < c.arrLen; j++) {
             if (c.arr[j].labsAvailable != 0) {
-                if (c.arr[j].isRunned == 1) {
+                if (c.arr[j].isRan == 1) {
                     for (int k = 0; k < p.arrLen; k++) {
                         if (strcmp(p.arr[k].firstName, c.arr[j].assignedP.firstName) == 0 && strcmp(p.arr[k].lastName, c.arr[j].assignedP.lastName) == 0) {
                             bp += 5; //Add BP, update data in prof's struct
@@ -184,7 +179,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
                         }
                         ta.arr[k].coursesAvailable += tempDel;
                     }
-                    c.arr[j].isRunned = 0; // Make course not ran
+                    c.arr[j].isRan = 0; // Make course not ran
                     bp += 20; // Add BP
                 }
             }
@@ -204,7 +199,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
     }
     //*****END OF BASE CASE*****
 
-    // Now the function goes through all TAs and treis to assign them to a course
+    // Now the function goes through all TAs and tries to assign them to a course
     for (int i = 0; i < ta.arrLen; i++) {
         if (ta.arr[i].coursesAvailable == 0) { // If TA has already taken 4 labs, then skip him/her
             continue;
@@ -216,7 +211,7 @@ void assignTA(struct TAArr ta, struct courseArr c, int bp, int * gbp, struct res
         int cur = 0; // Index of course
         int curFlag = 0; // Flag which shows whether we've chosen a course or not
         for (int j = 0; j < c.arrLen; j++) {
-            if (c.arr[j].labsAvailable > 0 && c.arr[j].isRunned == 1 && trainedTA(ta.arr[i], c.arr[j]) == 1) { // Course must need more labs, be ran by a prof and suitable for current TA
+            if (c.arr[j].labsAvailable > 0 && c.arr[j].isRan == 1 && trainedTA(ta.arr[i], c.arr[j]) == 1) { // Course needs more labs, be ran by a prof and is suitable for current TA
                 cur = j;
                 curFlag = 1;
                 c.arr[j].labsAvailable--;
@@ -261,7 +256,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int * gbp, struct res
     if (flag1 == 1 || flag2 == 1) {
         // Assign BP respectively
         for (int i = 0; i < c.arrLen; i++) {
-            if (c.arr[i].isRunned == 0) {
+            if (c.arr[i].isRan == 0) {
                 bp += 20;
             }
         }
@@ -287,12 +282,12 @@ void assignP(struct profArr p, struct courseArr c, int bp, int * gbp, struct res
     // We need such situation for the correct distribution of BP on the stage of distributing TAs
     for (int i = 0; i < p.arrLen + 1; i++) {
         if (i == p.arrLen) { // If this is the last iteration, do not assign this course to anybody, but make it unavailable for assignment too
-            int cur;
+            int cur = 0;
             for (int j = 0; j < c.arrLen; j++) {
                 if (c.arr[j].isAvailable == 1) {
                     cur = j;
                     c.arr[j].isAvailable = 0;
-                    c.arr[j].isRunned = 0;
+                    c.arr[j].isRan = 0;
                     break;
                 }
             }
@@ -306,12 +301,12 @@ void assignP(struct profArr p, struct courseArr c, int bp, int * gbp, struct res
                 p.arr[i].coursesAvailable--;
             }
 
-            int cur; // Choose the availiable course
+            int cur = 0; // Choose the availiable course
             for (int j = 0; j < c.arrLen; j++) {
                 if (c.arr[j].isAvailable == 1) {
                     cur = j;
                     c.arr[j].isAvailable = 0;
-                    c.arr[j].isRunned = 1;
+                    c.arr[j].isRan = 1;
                     break;
                 }
             }
@@ -325,7 +320,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int * gbp, struct res
                     p.arr[i].isTeachingUntrained = 1;
                 } else { // If prof is untrained, but already has a course, skip him/her
                     c.arr[cur].isAvailable = 1;
-                    c.arr[cur].isRunned = 0;
+                    c.arr[cur].isRan = 0;
                     p.arr[i].coursesAvailable++;
                     continue;
                 }
@@ -343,7 +338,7 @@ void assignP(struct profArr p, struct courseArr c, int bp, int * gbp, struct res
                 p.arr[i].coursesAvailable++;
             }
             c.arr[cur].isAvailable = 1;
-            c.arr[cur].isRunned = 0;
+            c.arr[cur].isRan = 0;
         }
     }
 }
@@ -413,7 +408,7 @@ int main() {
             int labsNeeded;
             int studentsAllowed;
 
-            int read = sscanf(buffer, "%s %d %d", & courseName, & labsNeeded, & studentsAllowed);
+            int read = sscanf(buffer, "%s %d %d", courseName, & labsNeeded, & studentsAllowed);
 
             if (read != 3 && strcmp(courseName, "P") == 0) {
                 break;
@@ -445,7 +440,7 @@ int main() {
 
             // Scan name and surname in this block of code
             int bytesRead = 0;
-            wordsRead = sscanf(buffer, "%s %s%n", & (proffs[numOfProffs].firstName), & (proffs[numOfProffs].lastName), & bytesRead);
+            wordsRead = sscanf(buffer, "%s %s%n", (proffs[numOfProffs].firstName), (proffs[numOfProffs].lastName), & bytesRead);
 
             if (wordsRead != 2) {
                 fprintf(output, "Invalid input.");
@@ -453,11 +448,12 @@ int main() {
             }
 
             char courseBuffer[100];
+            proffs[numOfProffs].numOfClasses = 0;
 
             // Loop for reading the subjects
             while (1) {
                 buffer += bytesRead;
-                wordsRead = sscanf(buffer, "%100s%n", & courseBuffer, & bytesRead);
+                wordsRead = sscanf(buffer, "%100s%n", courseBuffer, & bytesRead);
                 if (wordsRead != 1) {
                     goto cleanup;
                 }
@@ -490,8 +486,6 @@ int main() {
             char * origBuffer = malloc(sizeof(char) * 1024);
             char * buffer = origBuffer;
 
-            int totalBytesRead = 0;
-
             if (fgets(buffer, 1024, input) == NULL) {
                 fprintf(output, "Invalid input.");
                 goto next;
@@ -504,7 +498,7 @@ int main() {
             }
 
             int bytesRead = 0;
-            wordsRead = sscanf(buffer, "%s %s%n", & (TAs[numOfTAs].firstName), & (TAs[numOfTAs].lastName), & bytesRead);
+            wordsRead = sscanf(buffer, "%s %s%n", (TAs[numOfTAs].firstName), (TAs[numOfTAs].lastName), & bytesRead);
 
             if (wordsRead != 2) {
                 fprintf(output, "Invalid input.");
@@ -512,10 +506,11 @@ int main() {
             }
 
             char courseBuffer[100];
+            TAs[numOfTAs].numOfClasses = 0;
 
             while (1) {
                 buffer += bytesRead;
-                wordsRead = sscanf(buffer, "%100s%n", & courseBuffer, & bytesRead);
+                wordsRead = sscanf(buffer, "%100s%n", courseBuffer, & bytesRead);
                 if (wordsRead != 1) {
                     goto ta_cleanup;
                 }
@@ -536,12 +531,12 @@ int main() {
             }
             ta_cleanup:
                 free(origBuffer);
-            numOfTAs++;
+                numOfTAs++;
         }
 
         // Reading students
         int numOfStudents = 0;
-        if (fgets(temp, 500, input) == NULL) {
+        if (fgets(temp, 500, input) == NULL) { // If there are no students
             goto algo;
         }
         int i = 0;
@@ -635,14 +630,17 @@ int main() {
                 break;
             }
 
-            fgets(temp, 500, input);
+            if (fgets(temp, 500, input) == NULL) { // If there are no students
+                fprintf(output, "Invalid input.");
+                goto next;
+            }
         }
 
         //**********************END OF THE PARSING****************************
 algo:
         // Now fill structs with apropriate information needed for algorithm
-        for (size_t i = 0; i < numOfStudents; i++) {
-            for (size_t j = 0; j < students[i].numOfClasses; j++) {
+        for (int i = 0; i < numOfStudents; i++) {
+            for (int j = 0; j < students[i].numOfClasses; j++) {
                 students[i].subjects[j].isStudied = 0;
             }
         }
@@ -652,7 +650,7 @@ algo:
 
         struct profArr list;
         list.arrLen = 0;
-        for (size_t i = 0; i < numOfProffs; i++) {
+        for (int i = 0; i < numOfProffs; i++) {
             list.arr[i] = proffs[i];
             list.arr[i].coursesAvailable = 2;
             list.arr[i].isTeachingUntrained = 0;
@@ -661,16 +659,16 @@ algo:
 
         struct courseArr list1;
         list1.arrLen = 0;
-        for (size_t i = 0; i < numOfCourses; i++) {
+        for (int i = 0; i < numOfCourses; i++) {
             list1.arr[i] = courses[i];
             list1.arr[i].isAvailable = 1;
-            list1.arr[i].isRunned = 0;
+            list1.arr[i].isRan = 0;
             list1.arr[i].labsAvailable = list1.arr[i].numOfLabs;
             list1.arrLen++;
         }
         struct TAArr list2;
         list2.arrLen = 0;
-        for (size_t i = 0; i < numOfTAs; i++) {
+        for (int i = 0; i < numOfTAs; i++) {
             list2.arr[i] = TAs[i];
             list2.arr[i].coursesAvailable = 4;
             list2.arrLen++;
@@ -684,7 +682,7 @@ algo:
         // Distribute students
         for (int i = 0; i < numOfStudents; i++) {
             for (int j = 0; j < res.c.arrLen; j++) {
-                if (isWanted(students[i], res.c.arr[j]) == 1 && res.c.arr[j].numOfStudents > 0 && res.c.arr[j].isRunned == 1) {
+                if (isWanted(students[i], res.c.arr[j]) == 1 && res.c.arr[j].numOfStudents > 0 && res.c.arr[j].isRan == 1) {
                     for (int k = 0; k < students[i].numOfClasses; k++) {
                         if (strcmp(students[i].subjects[k].name, res.c.arr[j].name) == 0) {
                             students[i].subjects[k].isStudied = 1;
@@ -699,7 +697,7 @@ algo:
         int ggbp = 0;
 
         for (int i = 0; i < res.c.arrLen; i++) {
-            if (res.c.arr[i].isRunned == 0) {
+            if (res.c.arr[i].isRan == 0) {
                 ggbp += 20;
             }
         }
@@ -727,7 +725,7 @@ algo:
 
         // Output
         for (int i = 0; i < res.c.arrLen; i++) {
-            if (res.c.arr[i].isRunned == 1) {
+            if (res.c.arr[i].isRan == 1) {
                 fprintf(output, "%s\n", res.c.arr[i].name);
                 fprintf(output, "%s %s\n", res.c.arr[i].assignedP.firstName, res.c.arr[i].assignedP.lastName);
                 for (int j = 0; j < res.c.arr[i].numOfLabs; j++) {
@@ -741,9 +739,8 @@ algo:
                 fprintf(output, "\n");
             }
         }
-
         for (int i = 0; i < res.c.arrLen; i++) {
-            if (res.c.arr[i].isRunned == 0) {
+            if (res.c.arr[i].isRan == 0) {
                 fprintf(output, "%s cannot be run.\n", res.c.arr[i].name);
             }
         }
@@ -751,6 +748,8 @@ algo:
             if (res.p.arr[i].coursesAvailable == 2) {
                 fprintf(output, "%s %s is unassigned.\n", res.p.arr[i].firstName, res.p.arr[i].lastName);
             }
+        }
+        for (int i = 0; i < res.p.arrLen; i++) {
             if (res.p.arr[i].coursesAvailable == 1) {
                 fprintf(output, "%s %s is lacking class.\n", res.p.arr[i].firstName, res.p.arr[i].lastName);
             }
